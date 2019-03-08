@@ -62,6 +62,8 @@ public class NewHomeActivity extends NexusLauncherActivity {
     private boolean mDirectlyBack = false;
     private boolean checkXposedInstaller = true;
 
+    private XHelperReceiver mHelerReceiver;
+
     public static void goHome(Context context) {
         Intent intent = new Intent(context, NewHomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -78,6 +80,9 @@ public class NewHomeActivity extends NexusLauncherActivity {
         alertForMeizu();
         alertForDoze();
         mDirectlyBack = sharedPreferences.getBoolean(SettingsActivity.DIRECTLY_BACK_KEY, false);
+
+        mHelerReceiver = new XHelperReceiver();
+        mHelerReceiver.register(this);
     }
 
     private void installXposed() {
@@ -337,5 +342,11 @@ public class NewHomeActivity extends NexusLauncherActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHelerReceiver.unRegister(this);
     }
 }
